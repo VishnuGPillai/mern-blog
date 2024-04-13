@@ -18,6 +18,7 @@ app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.use('/api/users', userRoutes)
 app.use('/api/posts', postRoutes)
+app.get('/', (req,res)=>res.send("HomePage"))
 
 app.use(notFound)
 app.use(errorHandler)
