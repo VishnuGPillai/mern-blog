@@ -22,7 +22,7 @@ const Register = () => {
     e.preventDefault();
     setError("");
     try {
-      const response = await axios.post(`http://localhost:5000/api/users/register`,userData);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/users/register`,userData);
       const newUser = await response.data;
       if(!newUser){
         setError("Couldnt register user");

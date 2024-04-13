@@ -24,7 +24,7 @@ const Login = () => {
     setError("");
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/users/login`,
+        `${process.env.REACT_APP_BASE_URL}/users/login`,
         userData
       );
       const user = response.data;

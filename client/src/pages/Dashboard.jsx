@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { DUMMY_POSTS } from "../data";
+// import { DUMMY_POSTS } from "../data";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import axios from "axios";
@@ -27,7 +27,7 @@ const Dashboard = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/posts/users/${id}`,
+          `${process.env.REACT_APP_BASE_URL}/posts/users/${id}`,
           {
             withCredentials: true,
             headers: { Authorization: `Bearer ${token}` },
@@ -57,7 +57,7 @@ const Dashboard = () => {
               <article key={post.id} className="dashboard__post">
                 <div className="dashboard__post-info">
                   <div className="dashboard__post-thumbnail">
-                    <img src={ `http://localhost:5000/uploads/${post.thumbnail}`} alt="" />
+                    <img src={ `${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`} alt="" />
                   </div>
                   <h5>{post.title}</h5>
                 </div>

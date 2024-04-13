@@ -74,8 +74,8 @@ const CreatePost = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/posts`,
-        postData,
+        `${process.env.REACT_APP_BASE_URL}/posts`,
+        postData, 
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 201) {

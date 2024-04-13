@@ -30,7 +30,7 @@ const UserProfile = () => {
   useEffect(() => {
     const getUser = async () => {
       const response = await axios.get(
-        `http://localhost:5000/api/users/${currentUser.id}`,
+        `${process.env.REACT_APP_BASE_URL}/users/${currentUser.id}`,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
       const { name, email, avatar } = response.data;
@@ -54,7 +54,7 @@ const UserProfile = () => {
       userData.set("confirmNewPassword", confirmNewPassword);
 
       const response = await axios.patch(
-        `http://localhost:5000/api/users/edit-user`,
+        `${process.env.REACT_APP_BASE_URL}/users/edit-user`,
         userData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
@@ -74,7 +74,7 @@ const UserProfile = () => {
       const postData = new FormData();
       postData.set("avatar", avatar);
       const response = await axios.post(
-        `http://localhost:5000/api/users/change-avatar`,
+        `${process.env.REACT_APP_BASE_URL}/users/change-avatar`,
         postData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
@@ -93,7 +93,7 @@ const UserProfile = () => {
         <div className="profile__details">
           <div className="avatar__wrapper">
             <div className="profile__avatar">
-              <img src={`http://localhost:5000/uploads/${avatar}`} alt="" />
+              <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${avatar}`} alt="" />
             </div>
             {/* Form to update avatar */}
             <form className="avatar__form">
