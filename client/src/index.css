@@ -37,6 +37,7 @@ body {
   font-family: "Poppins", sans-serif;
   background: var(--color-bg);
   font-size: 0.9rem;
+  /* min-height: 100vh; */
   line-height: 1.6;
   color: var(--color-gray-700);
 }
@@ -195,11 +196,12 @@ nav {
 .nav__toggle-btn {
   display: none;
 }
-.nav__menu  li  a{
-  color:  #b7c2d6 ;
+.nav__menu li a {
+  color: #b7c2d6;
 }
 /* =================================FOOTER================================= */
 footer {
+  display: block;
   background: var(--color-gray-900);
   margin-top: 6rem;
   overflow: auto;
@@ -600,7 +602,7 @@ textarea {
     background: var(--color-white);
     padding: 0.85rem 2.5rem;
   }
-  .nav__toggle-btn { 
+  .nav__toggle-btn {
     color: white;
     display: inline-block;
     background: transparent;
@@ -650,4 +652,5 @@ textarea {
   .dashboard__post-thumbnail {
     width: 5rem;
   }
+
 }
