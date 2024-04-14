@@ -600,7 +600,7 @@ textarea {
     background: var(--color-white);
     padding: 0.85rem 2.5rem;
   }
-  .nav__toggle-btn {
+  .nav__toggle-btn { color: white;
     display: inline-block;
     background: transparent;
     font-size: 1.5rem;
