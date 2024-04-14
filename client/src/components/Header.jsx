@@ -13,7 +13,15 @@ const Header = () => {
     window.innerWidth > 800 ? true : false
   );
   const { currentUser } = useContext(UserContext);
-
+  
+useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 800) setIsNavShowing(true);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+  }, []);
+  
   const closeNavHandler = () => {
     if (window.innerWidth < 800) {
       setIsNavShowing(false);
