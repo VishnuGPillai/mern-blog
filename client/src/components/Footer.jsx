@@ -8,7 +8,7 @@ const Footer = () => {
         <li>
           <Link to="/posts/categories/Agriculture">Agriculture</Link>
         </li>
-        <li>
+        <li> 
           <Link to="/posts/categories/Business">Business</Link>
         </li>
         <li>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../images/logo.jpeg";
 // import BlogLogo from "../images/blog-logo.avif";
@@ -9,11 +9,16 @@ import { FaBars } from "react-icons/fa";
 import { UserContext } from "../context/userContext";
 
 const Header = () => {
-  const [isNavShowing, setIsNavShowing] = useState(
-    window.innerWidth > 800 ? true : false
-  );
+  const [isNavShowing, setIsNavShowing] = useState(true);
   const { currentUser } = useContext(UserContext);
-
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 800) setIsNavShowing(true);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+  }, []);
   const closeNavHandler = () => {
     if (window.innerWidth < 800) {
       setIsNavShowing(false);
@@ -21,11 +26,12 @@ const Header = () => {
       setIsNavShowing(true);
     }
   };
+
   return (
     <nav>
       <div className="container nav__container">
         <Link to="/" className="nav__logo" onClick={closeNavHandler}>
-          <img src={BlogLogo}   className="blog__logo"  alt="Navbar Logo" />
+          <img src={BlogLogo} className="blog__logo" alt="Navbar Logo" />
         </Link>
         {currentUser && isNavShowing && (
           <ul className="nav__menu">
