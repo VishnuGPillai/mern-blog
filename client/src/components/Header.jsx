@@ -11,14 +11,15 @@ import { UserContext } from "../context/userContext";
 const Header = () => {
   const [isNavShowing, setIsNavShowing] = useState(true);
   const { currentUser } = useContext(UserContext);
-  
-  useEffect(() => {
+
+useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 800) setIsNavShowing(true);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
   }, []);
+  
   const closeNavHandler = () => {
     if (window.innerWidth < 800) {
       setIsNavShowing(false);
