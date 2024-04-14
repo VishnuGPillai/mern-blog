@@ -9,7 +9,7 @@ import { FaBars } from "react-icons/fa";
 import { UserContext } from "../context/userContext";
 
 const Header = () => {
-  const [isNavShowing, setIsNavShowing] = useState(true);
+  const [isNavShowing, setIsNavShowing] = useState(false);
   const { currentUser } = useContext(UserContext);
 
 useEffect(() => {
