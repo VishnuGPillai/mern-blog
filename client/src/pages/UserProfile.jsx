@@ -25,22 +25,22 @@ const UserProfile = () => {
     if (!token) {
       navigate("/login");
     }
-  }, []);
+  }, [token, navigate]);
+
+  const getUser = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/users/${currentUser.id}`,
+      { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
+    );
+    const { name, email, avatar } = response.data;
+    setName(name);
+    setEmail(email);
+    setAvatar(avatar);
+  };
 
   useEffect(() => {
-    const getUser = async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/users/${currentUser.id}`,
-        { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
-      );
-      const { name, email, avatar } = response.data;
-      setName(name);
-      setEmail(email);
-      setAvatar(avatar);
-    };
-
     getUser();
-  }, []);
+  }, [currentUser, token]);
 
   const updateUserDetails = async (e) => {
     e.preventDefault();
@@ -59,9 +59,9 @@ const UserProfile = () => {
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if(response.status==200){
+      if (response.status === 200) {
         //  logout user
-        navigate('/logout');
+        navigate("/logout");
       }
     } catch (error) {
       setError(error.response.data.message);
@@ -78,9 +78,10 @@ const UserProfile = () => {
         postData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
-      setAvatar(response?.data.avatar);
+      getUser();
+      // setAvatar(response?.data.avatar);
     } catch (error) {
-      setError(error);
+      setError(error.response.data.message);
     }
   };
   return (
@@ -93,7 +94,8 @@ const UserProfile = () => {
         <div className="profile__details">
           <div className="avatar__wrapper">
             <div className="profile__avatar">
-              <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${avatar}`} alt="" />
+              {/* <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${avatar}`} alt="" /> */}
+              <img src={avatar} alt="" />
             </div>
             {/* Form to update avatar */}
             <form className="avatar__form">

@@ -22,7 +22,7 @@ const EditPost = () => {
     if (!token) {
       navigate("/login");
     }
-  }, []);
+  }, [navigate,token]);
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -78,7 +78,7 @@ const EditPost = () => {
     };
 
     getPost();
-  }, []);
+  }, [id]);
 
   const editPost = async (e) => {
     e.preventDefault();
@@ -133,7 +133,8 @@ const EditPost = () => {
           <input
             type="file"
             onChange={(e) => setThumbnail(e.target.files[0])}
-            accept="png,jpg,jpeg"
+            // accept="png,jpg,jpeg"
+            accept="image/*"  
           />
           <button type="submit" className="btn primary">
             {" "}

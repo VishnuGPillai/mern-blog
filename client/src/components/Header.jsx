@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Logo from "../images/logo.jpeg";
+// import Logo from "../images/logo.jpeg";
 // import BlogLogo from "../images/blog-logo.avif";
 import BlogLogo from "../images/new_blog_logo.png";
 import { AiOutlineClose } from "react-icons/ai";
@@ -9,7 +9,7 @@ import { FaBars } from "react-icons/fa";
 import { UserContext } from "../context/userContext";
 
 const Header = () => {
-  const [isNavShowing, setIsNavShowing] = useState(true);
+  const [isNavShowing, setIsNavShowing] = useState(false);
   const { currentUser } = useContext(UserContext);
 
 useEffect(() => {
@@ -19,7 +19,7 @@ useEffect(() => {
     window.addEventListener("resize", handleResize);
     handleResize();
   }, []);
-  
+
   const closeNavHandler = () => {
     if (window.innerWidth < 800) {
       setIsNavShowing(false);

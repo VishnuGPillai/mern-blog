@@ -7,6 +7,20 @@ const { v4: uuid } = require('uuid');
 const User = require('../models/userModel')
 const HttpError = require("../models/errorModel")
 
+//aws
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+//env variables
+const bucketName = process.env.BUCKET_NAME
+const bucketRegion = process.env.BUCKET_REGION
+const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID
+const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
+
+//common aws code
+const s3 = new S3Client({
+    region: bucketRegion,
+    //aws access key and secret access key is automatically generated from .env file
+})
 
 // ========================== REGISTER USER
 // POST : api/users/register
@@ -89,6 +103,13 @@ const getUser = async (req, res, next) => {
     try {
         const { id } = req.params;
         const user = await User.findById(id).select('-password');
+        const getObjectParams = {
+            Bucket: bucketName,
+            Key: user.avatar
+        }
+        const command = new GetObjectCommand(getObjectParams);
+        const url = await getSignedUrl(s3, command)
+        user.avatar = url;
         if (!user) { return next(new HttpError("User not found.", 422)); }
         return res.status(200).json(user);
 
@@ -109,15 +130,22 @@ const changeAvatar = async (req, res, next) => {
             return next(new HttpError("Please choose an image.", 422));
         }
 
-        //find user from database
         const user = await User.findById(req.user.id);
+
         //delete old avatar if exists
         if (user.avatar) {
-            fs.unlink(path.join(__dirname, '..', 'uploads', user.avatar), (err) => {
-                if (err) {
-                    return next(new HttpError(err));
-                }
-            })
+            // fs.unlink(path.join(__dirname, '..', 'uploads', user.avatar), (err) => {
+            //     if (err) {
+            //         return next(new HttpError(err));
+            //     }
+            // })
+            const params = {
+                Bucket: bucketName,
+                Key: user.avatar,
+            }
+            const command = new DeleteObjectCommand(params);
+            await s3.send(command);
+
         }
 
         const { avatar } = req.files;
@@ -131,18 +159,29 @@ const changeAvatar = async (req, res, next) => {
         let splittedFileName = fileName.split('.');
         let newFileName = splittedFileName[0] + uuid() + '.' + splittedFileName[splittedFileName.length - 1];
 
-        avatar.mv(path.join(__dirname, '..', 'uploads', newFileName), async (err) => {
-            if (err) {
-                return next(new HttpError(err));
-            }
+        //local avatar update
+        // avatar.mv(path.join(__dirname, '..', 'uploads', newFileName), async (err) => {
+        //     if (err) {
+        //         return next(new HttpError(err));
+        //     }
 
-            const updatedAvatar = await User.findByIdAndUpdate(req.user.id, { avatar: newFileName }, { new: true })
-            if (!updatedAvatar) {
-                return next(new HttpError("Avatar couldn't be changed", 422))
-            }
-            return res.status(200).json(updatedAvatar);
-        })
+        // aws update avatar
+        const params = {
+            Bucket: bucketName,
+            Key: newFileName,
+            Body: avatar.data,
+            ContentType: avatar.mimetype,
+        }
+        const command = new PutObjectCommand(params)
+        await s3.send(command);
 
+        const updatedAvatar = await User.findByIdAndUpdate(req.user.id, { avatar: newFileName }, { new: true })
+        if (!updatedAvatar) {
+            return next(new HttpError("Avatar couldn't be changed", 422))
+        }
+        return res.status(200).json(updatedAvatar);
+        // })
+        // console.log(avatar);
 
     } catch (error) {
         return next(new HttpError(error));
@@ -208,6 +247,18 @@ const editUser = async (req, res, next) => {
 const getAuthors = async (req, res, next) => {
     try {
         const authors = await User.find().select('-password');
+        console.log(authors);
+        for (const author of authors) {
+            if (author?.avatar) {
+                const getObjectParams = {
+                    Bucket: bucketName,
+                    Key: author.avatar
+                }
+                const command = new GetObjectCommand(getObjectParams);
+                const url = await getSignedUrl(s3, command)
+                author.avatar = url;
+            } 
+        }
         res.json(authors);
     } catch (error) {
         return next(new HttpError(error))

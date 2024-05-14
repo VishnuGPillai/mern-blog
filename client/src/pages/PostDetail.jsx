@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import Thumbnail from "../images/science.png";
+// import Thumbnail from "../images/science.png";
 import PostAuthor from "../components/PostAuthor";
 import Loader from "../components/Loader";
 import DeletePost from "./DeletePost";
@@ -30,7 +30,7 @@ const PostDetail = () => {
     };
 
     getPost();
-  },[]);
+  },[id]);
   if (isLoading) {
     return <Loader />;
   }
@@ -52,7 +52,8 @@ const PostDetail = () => {
           </div>
           <h1>{post.title}</h1>
           <div className="post-detail__thumbnail">
-            <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`} alt="" />
+            {/* <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`} alt="" /> */}
+            <img src={post.thumbnail} alt="" />
           </div>
           <p dangerouslySetInnerHTML={{__html:post.description}}></p>
         </div>

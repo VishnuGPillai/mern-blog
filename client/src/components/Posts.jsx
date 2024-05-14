@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PostItem from "./PostItem";
 import axios from "axios";
 
-import { DUMMY_POSTS } from "../data";
+// import { DUMMY_POSTS } from "../data";
 import Loader from "./Loader";
  
 const Posts = () => {
@@ -14,16 +14,17 @@ const Posts = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/posts`)
-        setPosts(response?.data)
+        setPosts(response?.data)     
       } catch (error) {
         console.log(error);
       }
 
-      setIsLoading(false);
+      setIsLoading(false);                                                      
     };
     fetchPosts();
 
   },[]);
+  
 
   if (isLoading) {
     return <Loader />;

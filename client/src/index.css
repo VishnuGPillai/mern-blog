@@ -201,8 +201,10 @@ nav {
 }
 /* =================================FOOTER================================= */
 footer {
-  display: block;
   background: var(--color-gray-900);
+  display: block;
+  /* position: fixed; */
+  width:100vw;
   margin-top: 6rem;
   overflow: auto;
   padding-top: 6rem;
@@ -396,7 +398,8 @@ textarea {
 /* ============================= Authors ============================= */
 .authors__container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* grid-template-columns: repeat(4, 1fr); */
+  /* grid-auto-columns: auto;  */
   gap: 3rem;
 }
 
@@ -405,6 +408,7 @@ textarea {
   padding: 1rem;
   border-radius: var(--radius-3);
   display: flex;
+  /* flex-wrap:wrap; */
   gap: 1rem;
   transition: var(--transition);
 }
@@ -417,7 +421,8 @@ textarea {
   width: 5rem;
   aspect-ratio: 1/1;
   border-radius: 50%;
-  border: 0.3rem solid var(--color-bg);
+  object-fit: contain;
+  /* border: 0.3rem solid var(--color-bg); */
   overflow: hidden;
 }
 
@@ -652,5 +657,4 @@ textarea {
   .dashboard__post-thumbnail {
     width: 5rem;
   }
-
 }

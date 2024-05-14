@@ -2,14 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { UserContext } from "../context/userContext";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const [thumbnail, setThumbnail] = useState(""); 
 
   const [error, setError] = useState("");
 
@@ -22,7 +22,7 @@ const CreatePost = () => {
     if (!token) {
       navigate("/login");
     }
-  }, []);
+  }, [navigate, token]);
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -38,30 +38,9 @@ const CreatePost = () => {
     ],
   };
 
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-  ];
+  const formats = ["header","bold","italic","underline","strike","blockquote","list","bullet","indent","link","image"];
 
-  const POST_CATEGORIES = [
-    "Agriculture",
-    "Business",
-    "Education",
-    "Entertainment",
-    "Art",
-    "Investment",
-    "Uncategorized",
-    "Weather",
-  ];
+  const POST_CATEGORIES = ["Agriculture","Business","Education","Entertainment","Art","Investment","Uncategorized","Weather"];
 
   const createPost = async (e) => {
     e.preventDefault();
@@ -75,30 +54,34 @@ const CreatePost = () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/posts`,
-        postData, 
+        postData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 201) {
         return navigate("/");
       }
     } catch (error) {
-      setError(error.response.data.message)
+      console.log(error);
+      setError(error.response?.data.message);
     }
   };
   return (
     <section className="create-post">
       <div className="container">
         <h2>Create Post</h2>
-        {error && (
-          <p className="form__error-message">{error}</p>
-        )}
-        <form className="form create-post__form" onSubmit={createPost}>
+        {error && <p className="form__error-message">{error}</p>}
+        <form
+          className="form create-post__form"
+          onSubmit={createPost}
+          encType="multipart/form-data"
+        >
           <input
             type="text"
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             autoFocus
+            required
           />
           <select
             name="category"
@@ -118,7 +101,9 @@ const CreatePost = () => {
           <input
             type="file"
             onChange={(e) => setThumbnail(e.target.files[0])}
-            accept="png,jpg,jpeg"
+            // accept="png,jpg,jpeg"
+            accept="image/*"
+            required
           />
           <button type="submit" className="btn primary">
             Create
